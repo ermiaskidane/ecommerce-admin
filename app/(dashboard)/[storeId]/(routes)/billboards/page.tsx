@@ -17,7 +17,7 @@ const BillboardsPage = async ({
     orderBy: {
       createdAt: 'desc'
     }
-  });
+  }); 
 
   const formattedBillboards: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,
