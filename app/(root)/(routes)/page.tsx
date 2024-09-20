@@ -3,7 +3,8 @@ import { useEffect } from "react";
 
 import { useStoreModal } from "@/hooks/use-store-modal";
 
-
+// this page runs when a register user for the first time
+// and opens the storeModal to create store
 const SetupPage = () => {
   // doesnt work with useEffect follow the second method
   // const storeModal = useStoreModal();

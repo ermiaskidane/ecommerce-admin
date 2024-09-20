@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
+// import { auth } from "@clerk/nextjs";
+import { auth } from '@clerk/nextjs/server'
 
 import prismadb from "@/lib/prismadb";
 
@@ -79,7 +80,7 @@ export async function PATCH(
     const { userId } = auth();
 
     const body = await req.json();
-
+ 
     const { name, price, categoryId, images, colorId, sizeId, isFeatured, isArchived } = body;
 
     if (!userId) {

@@ -32,6 +32,7 @@ const formSchema = z.object({
   name: z.string().min(1),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
+  quantity: z.coerce.number().int().min(1).optional(),
   categoryId: z.string().min(1),
   colorId: z.string().min(1),
   sizeId: z.string().min(1),
@@ -58,7 +59,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 }) => {
   const params = useParams();
   const router = useRouter();
-
+ 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -73,10 +74,12 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const defaultValues = initialData ? {
     ...initialData, 
     price: parseFloat(String(initialData?.price)),
+    quantity: parseFloat(String(initialData?.quantity)),
   } : {
     name: '',
     images: [],
     price: 0,
+    quantity: 0,
     categoryId: '',
     colorId: '',
     sizeId: '',
@@ -193,6 +196,26 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             />
             <FormField
               control={form.control}
+              name="quantity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Quantity</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="number" 
+                      disabled={loading} 
+                      placeholder="9" 
+                      min={1} // Prevents negative numbers
+                      step={1} // Prevents decimals
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="categoryId"
               render={({ field }) => (
                 <FormItem>
@@ -212,7 +235,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> 
             <FormField
               control={form.control}
               name="sizeId"

@@ -17,7 +17,7 @@ interface DashboardPageProps {
     storeId: string;
   };
 };
-
+ 
 const DashboardPage: React.FC<DashboardPageProps> = async ({ 
   params
 }) => {
@@ -26,6 +26,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({
   const salesCount = await getSalesCount(params.storeId);
   const stockCount = await getStockCount(params.storeId);
 
+  // console.log(graphRevenue)
   // const store = await prismadb.store.findFirst({
   //   where: {
   //     id: params.storeId

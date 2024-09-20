@@ -19,6 +19,8 @@ const SizesPage = async ({
     }
   });
 
+  // console.log("EWEFWEFWFsd", sizes)
+
   const formattedSizes: SizeColumn[] = sizes.map((item) => ({
     id: item.id,
     name: item.name,

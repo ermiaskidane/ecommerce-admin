@@ -27,7 +27,11 @@ export const BillboardClient: React.FC<BillboardClientProps> = ({
     <>
       <div className="flex items-center justify-between">
         <Heading title={`Billboards (${data.length})`} description="Manage billboards for your store" />
-        <Button onClick={() => router.push(`/${params.storeId}/billboards/new`)}>
+        {/* as mongodb has to check through ObjectIDwhich has hex string with 12 bytes I used a random number insted of string,
+        if our database is sql we can use  three length hex string representation like "new" 
+         */}
+        {/* <Button onClick={() => router.push(`/${params.storeId}/billboards/new`)}> */}
+        <Button onClick={() => router.push(`/${params.storeId}/billboards/6512c326f323f44d75c5414d`)}>
           <Plus className="mr-2 h-4 w-4" /> Add New
         </Button>
       </div>

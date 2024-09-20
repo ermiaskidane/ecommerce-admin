@@ -6,29 +6,30 @@ generator client {
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "mongodb"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model Store {
-  id         String      @id @default(uuid())
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   userId     String
-  billboards Billboard[] @relation("StoreToBillboard")
-  categories Category[]  @relation("StoreToCategory")
-  products   Product[]   @relation("StoreToProduct")
-  sizes      Size[]      @relation("StoreToSize")
-  colors     Color[]     @relation("StoreToColor")
-  orders     Order[]     @relation("StoreToOrder")
+  billboards Billboard[]
+  categories Category[]
+  products   Product[]
+  sizes      Size[]
+  colors     Color[]
+  orders     Order[]     @relation("StoreOrders")
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  Order      Order[]
 }
 
 model Billboard {
-  id         String     @id @default(uuid())
-  storeId    String
-  store      Store      @relation("StoreToBillboard", fields: [storeId], references: [id])
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  storeId    String     @db.ObjectId
+  store      Store      @relation(fields: [storeId], references: [id])
   label      String
   imageUrl   String
   categories Category[]
@@ -39,13 +40,13 @@ model Billboard {
 }
 
 model Category {
-  id          String    @id @default(uuid())
-  storeId     String // Foreign Key to Store
-  store       Store     @relation("StoreToCategory", fields: [storeId], references: [id])
-  billboardId String // Foreign Key to Billboard
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  storeId     String    @db.ObjectId // Foreign Key to Store
+  store       Store     @relation(fields: [storeId], references: [id])
+  billboardId String    @db.ObjectId // Foreign Key to Billboard
   billboard   Billboard @relation(fields: [billboardId], references: [id])
   name        String
-  products    Product[] @relation("CategoryToProduct")
+  products    Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -54,9 +55,9 @@ model Category {
 }
 
 model Size {
-  id        String    @id @default(uuid())
-  storeId   String // Foreign Key to Store
-  store     Store     @relation("StoreToSize", fields: [storeId], references: [id])
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  storeId   String    @db.ObjectId // Foreign Key to Store
+  store     Store     @relation(fields: [storeId], references: [id])
   name      String
   value     String
   products  Product[] // Relation to Product model
@@ -67,9 +68,9 @@ model Size {
 }
 
 model Color {
-  id        String    @id @default(uuid())
-  storeId   String // Foreign Key to Store
-  store     Store     @relation("StoreToColor", fields: [storeId], references: [id])
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  storeId   String    @db.ObjectId // Foreign Key to Store
+  store     Store     @relation(fields: [storeId], references: [id])
   name      String
   value     String
   products  Product[] // Relation to Product model
@@ -80,18 +81,19 @@ model Color {
 }
 
 model Product {
-  id         String      @id @default(uuid())
-  storeId    String // Foreign Key to Store
-  store      Store       @relation("StoreToProduct", fields: [storeId], references: [id])
-  categoryId String // Foreign Key to Category
-  category   Category    @relation("CategoryToProduct", fields: [categoryId], references: [id])
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  storeId    String      @db.ObjectId // Foreign Key to Store
+  store      Store       @relation(fields: [storeId], references: [id])
+  categoryId String      @db.ObjectId // Foreign Key to Category
+  category   Category    @relation(fields: [categoryId], references: [id])
   name       String
-  price      Decimal
+  price      Float
+  quantity   Float?
   isFeatured Boolean     @default(false)
   isArchived Boolean     @default(false)
-  sizeId     String // Foreign Key to Size
+  sizeId     String      @db.ObjectId // Foreign Key to Size
   size       Size        @relation(fields: [sizeId], references: [id])
-  colorId    String // Foreign Key to Color
+  colorId    String      @db.ObjectId // Foreign Key to Color
   color      Color       @relation(fields: [colorId], references: [id])
   images     Image[] // Relation to Image model
   orderItems OrderItem[] // Relation to Order model
@@ -105,8 +107,8 @@ model Product {
 }
 
 model Image {
-  id        String   @id @default(uuid())
-  productId String // Foreign Key to Product
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @db.ObjectId // Foreign Key to Product
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   url       String // URL of the image
   createdAt DateTime @default(now())
@@ -116,25 +118,26 @@ model Image {
 }
 
 model Order {
-  id         String      @id @default(uuid())
-  storeId    String // Foreign Key to Store
-  store      Store       @relation("StoreToOrder", fields: [storeId], references: [id])
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  storeId    String      @db.ObjectId // Foreign Key to Store
+  store      Store       @relation("StoreOrders", fields: [storeId], references: [id])
   orderItems OrderItem[] // Relation to OrderItem model
   isPaid     Boolean     @default(false)
   phone      String      @default("")
   address    String      @default("")
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+  Store      Store       @relation(fields: [storeId], references: [id])
 
   @@index([storeId])
 }
 
 // Intermediary for a many-to-many relationship
 model OrderItem {
-  id        String  @id @default(uuid())
-  orderId   String // Foreign Key to Order
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String  @db.ObjectId // Foreign Key to Order
   order     Order   @relation(fields: [orderId], references: [id])
-  productId String // Foreign Key to Product
+  productId String  @db.ObjectId // Foreign Key to Product
   product   Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])

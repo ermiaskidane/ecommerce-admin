@@ -31,12 +31,15 @@ const ProductsPage = async ({
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
     // note that price is decimal here converted to number (toNumber())
-    price: formatter.format(item.price.toNumber()),
+    // price: formatter.format(item.price.toNumber()),
+    price: formatter.format(item.price),
     category: item.category.name,
     size: item.size.name,
     color: item.color.value,
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
+
+  console.log("sffsd", formattedProducts)
 
   return (
     <div className="flex-col">

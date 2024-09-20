@@ -19,6 +19,8 @@ const BillboardsPage = async ({
     }
   }); 
 
+  // console.log("aaaaaaaaaaaaaaa", billboards)
+
   const formattedBillboards: BillboardColumn[] = billboards.map((item) => ({
     id: item.id,
     label: item.label,

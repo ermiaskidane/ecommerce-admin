@@ -1,4 +1,5 @@
-import { UserButton, auth } from '@clerk/nextjs'
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { auth } from '@clerk/nextjs/server'
 import { MainNav } from '@/components/main-nav'
 import StoreSwitcher from '@/components/store-switcher'
 import { redirect } from 'next/navigation';
@@ -25,7 +26,13 @@ const Navbar = async () => {
         <MainNav className='mx-6'/>
         <div className="ml-auto flex items-center space-x-4">
           <ThemeToggle/>
-          <UserButton afterSignOutUrl='/'/>
+          {/* <UserButton afterSignOutUrl='/'/> */}
+          <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
         </div>
       </div>
     </div>
