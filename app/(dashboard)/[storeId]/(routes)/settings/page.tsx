@@ -1,7 +1,5 @@
 import { redirect } from "next/navigation";
-// import { auth } from "@clerk/nextjs";
-import { auth } from '@clerk/nextjs/server'
-
+import { auth } from "@clerk/nextjs";
 import prismadb from "@/lib/prismadb";
 
 import { SettingsForm } from "./components/settings-form";
